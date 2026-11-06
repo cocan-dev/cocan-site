@@ -44,3 +44,23 @@ h3 { font: 600 1.05rem var(--mono); margin: 0 0 0.4rem; }
 .project h3 a { text-decoration: none; }
 footer { margin-top: 4rem; padding-bottom: 2rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 1rem; }
 footer p { margin: 0 0 0.4rem; }
+
+/* Team: each person is a generated "chip" (a nod to KiCad parts) */
+.team { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+.chip { text-align: center; --c: var(--accent); }
+.chip.c2 { --c: #1f8a7a; }
+.chip.c3 { --c: #6b4fd0; }
+@media (prefers-color-scheme: dark) {
+  .chip.c2 { --c: #4fd1b8; }
+  .chip.c3 { --c: #a38bff; }
+}
+.chip svg { width: 8rem; max-width: 100%; height: auto; overflow: visible; }
+.chip .pins rect { fill: var(--muted); opacity: 0.55; transition: transform 0.25s, opacity 0.25s, fill 0.25s; }
+.chip .body { fill: var(--card); stroke: var(--c); stroke-width: 2; }
+.chip .pin1 { fill: var(--c); }
+.chip .die rect { fill: var(--c); transition: opacity 0.4s; }
+.chip:hover .pins rect, .chip:focus-within .pins rect { fill: var(--c); opacity: 1; }
+.chip:hover .die rect:nth-child(odd) { opacity: 0.35; }
+.chip h3 { margin: 0.5rem 0 0; }
+.chip h3::before { content: "U"; color: var(--muted); margin-right: 0.3em; }
+@media (prefers-reduced-motion: reduce) { .chip * { transition: none !important; } }
