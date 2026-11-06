@@ -58,7 +58,7 @@ for r in paged(f"orgs/{ORG}/repos?type=public&per_page=100"):
         name=r["name"], desc=r["description"] or "", url=r["html_url"],
         lic=(r.get("license") or {}).get("spdx_id") or "",
         total=len(commits), last=d(commits[0]["commit"]["author"]["date"]),
-        recent=[(d(c["commit"]["author"]["date"]), c["commit"]["message"].splitlines()[0]) for c in commits[:3]],
+        recent=[(d(c["commit"]["author"]["date"]), c["commit"]["message"].splitlines()[0]) for c in commits[:1]],
         weekly=weekly))
 
 projects.sort(key=lambda p: (p["last"], p["name"]), reverse=True)
