@@ -31,7 +31,7 @@ header { padding-top: 1.5rem; }
 .logo span { color: var(--accent); }
 a { color: var(--accent); text-underline-offset: 0.2em; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.hero { padding: 4rem 0 2rem; }
+.hero { padding: 4rem 0 2rem; position: relative; isolation: isolate; }
 h1 { font: 700 clamp(1.9rem, 5vw, 2.8rem)/1.15 var(--mono); margin: 0 0 1rem; letter-spacing: -0.02em; }
 h2 { font: 600 0.95rem var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 3rem 0 1rem; border-bottom: 1px solid var(--line); padding-bottom: 0.5rem; }
 h3 { font: 600 1.05rem var(--mono); margin: 0 0 0.4rem; }
@@ -93,3 +93,46 @@ footer p { margin: 0 0 0.4rem; }
 .proj .meta { display: flex; justify-content: space-between; gap: 0.5rem; font: 0.75rem var(--mono); color: var(--muted); }
 .more { margin: 1rem 0 0; font-family: var(--mono); font-size: 0.9rem; }
 @media (prefers-reduced-motion: reduce) { .bar, .cell, .led, .proj { animation: none !important; transition: none !important; } }
+
+/* Hero: reactive grid (grid.js moves --mx/--my with the pointer) */
+.gridfx { position: absolute; inset: 0 -1rem; z-index: -1; --mx: 30%; --my: 40%; pointer-events: none;
+  background-image: linear-gradient(color-mix(in srgb, var(--fg) 14%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--fg) 14%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent); mask-image: linear-gradient(to bottom, #000 40%, transparent); }
+.gridfx::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
+  background-image: linear-gradient(var(--accent) 1px, transparent 1px), linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000, transparent);
+  mask-image: radial-gradient(circle 150px at var(--mx) var(--my), #000, transparent); }
+.gridfx.active::after { opacity: 0.9; }
+
+/* What we do: animated technical icons */
+.svcs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); --p0: var(--accent); --p1: #1f8a7a; --p2: #6b4fd0; }
+@media (prefers-color-scheme: dark) { .svcs { --p1: #4fd1b8; --p2: #a38bff; } }
+.svc { --c: var(--p0); background: var(--card); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 6px; padding: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
+.svc.s1 { --c: var(--p1); } .svc.s2 { --c: var(--p2); }
+.svc:hover { transform: translateY(-3px); box-shadow: 0 6px 18px color-mix(in srgb, var(--c) 25%, transparent); }
+.svc svg { width: 100%; height: 5rem; display: block; margin-bottom: 0.6rem; overflow: visible; }
+.svc h3 { color: var(--c); }
+.svc p { margin: 0; font-size: 0.95rem; }
+.svc .ground, .svc .bar, .svc .wires path { stroke: var(--muted); stroke-width: 1.5; fill: none; opacity: 0.5; }
+/* MVP: blocks stack up, then the ship arrow flashes */
+.blk { fill: var(--c); transform-box: fill-box; transform-origin: bottom; animation: stack 4s ease-in-out infinite; }
+.b2 { animation-delay: 0.3s; } .b3 { animation-delay: 0.6s; }
+@keyframes stack { 0% { transform: scaleY(0); } 25%, 85% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+.ship { stroke: var(--c); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; animation: ship 4s ease-in-out infinite; }
+@keyframes ship { 0%, 30% { opacity: 0; transform: translateY(6px); } 45%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+/* Prototype: dashed frame marches, placeholders fill in */
+.frame { fill: none; stroke: var(--c); stroke-width: 2; stroke-dasharray: 6 5; animation: march 1.5s linear infinite; }
+@keyframes march { to { stroke-dashoffset: -22; } }
+.dot { fill: var(--c); }
+.ph { fill: var(--c); opacity: 0.15; animation: fillin 4s ease-in-out infinite; }
+.w2 { animation-delay: 0.4s; } .w3 { animation-delay: 0.8s; } .w4 { animation-delay: 1.2s; }
+@keyframes fillin { 0%, 10% { opacity: 0.1; } 30%, 80% { opacity: 0.7; } 100% { opacity: 0.1; } }
+/* AI: nodes pulse and a signal runs the hot path */
+.nodes circle { fill: var(--card); stroke: var(--c); stroke-width: 2; animation: node 3s ease-in-out infinite; }
+.nodes circle:nth-child(3n) { animation-delay: 0.5s; } .nodes circle:nth-child(3n+1) { animation-delay: 1s; } .nodes circle:nth-child(n+7) { animation-delay: 1.5s; }
+@keyframes node { 0%, 100% { fill: var(--card); } 50% { fill: var(--c); } }
+.wires.hot path { stroke: var(--c); opacity: 1; stroke-dasharray: 6 40; animation: flow 1.6s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -92; } }
+@media (prefers-reduced-motion: reduce) { .blk, .ship, .frame, .ph, .nodes circle, .wires.hot path { animation: none !important; } .ph { opacity: 0.5; } }

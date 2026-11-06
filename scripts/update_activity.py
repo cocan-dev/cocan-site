@@ -118,7 +118,7 @@ def card(p):
         </li>'''
 
 
-more = f'\n      <p class="more"><a href="https://github.com/{ORG}">All repositories on GitHub →</a></p>'
+more = f'\n      <p class="more"><a href="https://github.com/orgs/{ORG}/repositories">All repositories on GitHub →</a></p>'
 out = f'''{START_MARK}
       <ul class="projects">
 {chr(10).join(card(p) for p in shown)}
