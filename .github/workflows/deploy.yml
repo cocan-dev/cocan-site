@@ -1,0 +1,42 @@
+name: Deploy site
+
+# Rebuilds the project cards from the public cocan-dev repos and deploys to
+# GitHub Pages. Nothing is committed back; the repo history stays clean.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 * * * *"   # hourly, picks up commits to other projects
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh project cards
+        run: python3 scripts/update_activity.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Collect site files
+        run: |
+          mkdir _site
+          cp index.html 404.html style.css grid.js favicon.svg robots.txt CNAME _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
