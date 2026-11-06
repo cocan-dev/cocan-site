@@ -123,3 +123,14 @@ footer p { margin: 0 0 0.4rem; }
 .gridfx.canvas { background: none; color: var(--fg); }
 .gridfx.canvas::after { display: none; }
 .gridfx canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Contact link and How we work */
+.hint { color: var(--muted); font: 0.85rem var(--mono); margin-left: 0.5rem; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 1.25rem; grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 40rem) { .steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 22rem) { .steps { grid-template-columns: 1fr; } }
+.steps li { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; border-left: 2px solid var(--line); padding: 0 0 1.5rem 1rem; transition: border-color 0.2s; }
+.steps li:hover { border-left-color: var(--accent); }
+.steps .n { font: 700 0.9rem var(--mono); color: var(--accent); margin-bottom: 0.2rem; }
+.steps h3 { margin: 0 0 0.4rem; }
+.steps p { margin: 0; font-size: 0.95rem; }
