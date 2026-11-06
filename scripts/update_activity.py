@@ -10,7 +10,6 @@ from collections import Counter
 from pathlib import Path
 
 ORG = "cocan-dev"
-WEEKS = 12      # length of each card's activity strip
 MAX_CARDS = 6   # most recently active projects shown
 START_MARK, END_MARK = "<!-- activity:start -->", "<!-- activity:end -->"
 INDEX = Path(__file__).resolve().parent.parent / "index.html"
@@ -27,17 +26,21 @@ def paged(path):
     return items
 
 
-def d(s):
-    return dt.date.fromisoformat(s[:10])
+def ts(s):
+    return dt.datetime.fromisoformat(s.replace("Z", "+00:00")).astimezone(dt.timezone.utc)
 
 
 def fmt(day):
     return f"{day.day} {day.strftime('%b %Y')}"
 
 
-today = dt.datetime.now(dt.timezone.utc).date()
-this_sunday = today - dt.timedelta(days=(today.weekday() + 1) % 7)
-first_week = this_sunday - dt.timedelta(weeks=WEEKS - 1)
+now = dt.datetime.now(dt.timezone.utc)
+today = now.date()
+
+
+def sunday(day):
+    return day - dt.timedelta(days=(day.weekday() + 1) % 7)
+
 
 projects = []
 for r in paged(f"orgs/{ORG}/repos?type=public&per_page=100"):
@@ -49,46 +52,73 @@ for r in paged(f"orgs/{ORG}/repos?type=public&per_page=100"):
         commits = []
     if not commits:
         continue
-    weekly = Counter()
-    for c in commits:
-        day = d(c["commit"]["author"]["date"])
-        wk = day - dt.timedelta(days=(day.weekday() + 1) % 7)
-        weekly[wk] += 1
+    times = [ts(c["commit"]["author"]["date"]) for c in commits]
     projects.append(dict(
         name=r["name"], desc=r["description"] or "", url=r["html_url"],
         lic=(r.get("license") or {}).get("spdx_id") or "",
-        total=len(commits), last=d(commits[0]["commit"]["author"]["date"]),
-        recent=[(d(c["commit"]["author"]["date"]), c["commit"]["message"].splitlines()[0]) for c in commits[:1]],
-        weekly=weekly))
+        total=len(times), last=max(times), first=min(times), times=times))
 
 projects.sort(key=lambda p: (p["last"], p["name"]), reverse=True)
 shown = projects[:MAX_CARDS]
 colour = {p["name"]: i % 3 for i, p in enumerate(sorted(projects, key=lambda p: p["name"]))}
 
 
+def level(n):
+    return 1 if n == 1 else 2 if n <= 3 else 3 if n <= 6 else 4
+
+
+def bars(counts, labels):
+    peak = max(counts) or 1
+    return "".join(
+        f'<i class="bar{" on" if n else ""}" style="--h:{max(12, round(100 * n / peak))}%;--i:{i}" '
+        f'title="{lab}: {n} commit{"s" if n != 1 else ""}"></i>'
+        for i, (n, lab) in enumerate(zip(counts, labels)))
+
+
+def graph(p):
+    """Pick the granularity from the project's age: hourly, then daily, then weekly."""
+    age = now - p["first"]
+    if age < dt.timedelta(days=3):  # just started: hourly bars, last 48 h
+        hours = Counter(t.replace(minute=0, second=0, microsecond=0) for t in p["times"])
+        slots = [now.replace(minute=0, second=0, microsecond=0) - dt.timedelta(hours=47 - i) for i in range(48)]
+        return "hourly", "last 48 hours", f'<div class="bars">{bars([hours[h] for h in slots], [f"{fmt(h.date())} {h:%H}:00 UTC" for h in slots])}</div>'
+    if age < dt.timedelta(weeks=12):  # young: daily calendar matrix, 12 weeks
+        days = Counter(t.date() for t in p["times"])
+        start = sunday(today) - dt.timedelta(weeks=11)
+        cells = []
+        for w in range(12):
+            for dd in range(7):
+                day = start + dt.timedelta(weeks=w, days=dd)
+                n = days.get(day, 0)
+                if day > today:
+                    cells.append('<i class="cell future"></i>')
+                else:
+                    cls = f"cell on l{level(n)}" if n else "cell"
+                    cells.append(f'<i class="{cls}" style="--i:{w}" title="{fmt(day)}: {n} commit{"s" if n != 1 else ""}"></i>')
+        return "daily", "last 12 weeks", f'<div class="matrix">{"".join(cells)}</div>'
+    weeks = Counter(sunday(t.date()) for t in p["times"])  # established: weekly bars, 52 weeks
+    slots = [sunday(today) - dt.timedelta(weeks=51 - i) for i in range(52)]
+    return "weekly", "last 52 weeks", f'<div class="bars">{bars([weeks[w] for w in slots], [f"week of {fmt(w)}" for w in slots])}</div>'
+
+
+def fmt(day):
+    return f"{day.day} {day.strftime('%b %Y')}"
+
+
 def card(p):
     e = html.escape
-    wk = [p["weekly"].get(first_week + dt.timedelta(weeks=i), 0) for i in range(WEEKS)]
-    peak = max(wk) or 1
-    bars = "".join(
-        f'<i class="bar{" on" if n else ""}" style="--h:{max(12, round(100 * n / peak))}%;--i:{i}" '
-        f'title="week of {fmt(first_week + dt.timedelta(weeks=i))}: {n} commit{"s" if n != 1 else ""}"></i>'
-        for i, n in enumerate(wk))
-    log = "".join(
-        f'<li><time datetime="{day}">{fmt(day)}</time> {e(msg[:70] + ("…" if len(msg) > 70 else ""))}</li>'
-        for day, msg in p["recent"])
-    live = ' live' if (today - p["last"]).days <= 14 else ''
+    unit, span, g = graph(p)
+    live = " live" if (now - p["last"]).days <= 14 else ""
     lic = f'<span class="badge">{e(p["lic"])}</span>' if p["lic"] and p["lic"] != "NOASSERTION" else ""
     return f'''        <li class="proj p{colour[p["name"]]}{live}">
           <div class="head"><span class="led" aria-hidden="true"></span><h3><a href="{e(p["url"])}">{e(p["name"])}</a></h3>{lic}</div>
           <p class="desc">{e(p["desc"])}</p>
-          <div class="bars" role="img" aria-label="{p["total"]} commits, weekly activity over the last {WEEKS} weeks">{bars}</div>
-          <ul class="log">{log}</ul>
-          <p class="meta">{p["total"]} commits · last {fmt(p["last"])}</p>
+          <div class="graph" role="img" aria-label="{p["total"]} commits, {unit} activity, {span}">{g}</div>
+          <p class="meta"><span>{p["total"]} commits · last {fmt(p["last"].date())}</span><span>{unit}</span></p>
         </li>'''
 
 
-more = (f'\n      <p class="more"><a href="https://github.com/{ORG}">All repositories on GitHub →</a></p>')
+more = f'\n      <p class="more"><a href="https://github.com/{ORG}">All repositories on GitHub →</a></p>'
 out = f'''{START_MARK}
       <ul class="projects">
 {chr(10).join(card(p) for p in shown)}
@@ -99,4 +129,4 @@ if START_MARK not in text:
     raise SystemExit("markers not found in index.html")
 text = re.sub(re.escape(START_MARK) + r".*?" + re.escape(END_MARK), lambda m: out, text, flags=re.S)
 INDEX.write_text(text, encoding="utf-8", newline="\n")
-print(f"{len(shown)} of {len(projects)} projects: " + ", ".join(p['name'] for p in shown))
+print(f"{len(shown)} of {len(projects)} projects: " + ", ".join(f"{p['name']} ({graph(p)[0]})" for p in shown))
