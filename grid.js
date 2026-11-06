@@ -1,3 +1,15 @@
+// Hourly activity bars are generated with UTC tooltips; show them in the
+// visitor's own time zone instead (the UTC text stays as the fallback).
+(function () {
+  var bars = document.querySelectorAll('.bar[data-h]');
+  for (var i = 0; i < bars.length; i++) {
+    var b = bars[i], d = new Date(b.getAttribute('data-h')), n = +b.getAttribute('data-n');
+    if (isNaN(d)) continue;
+    var when = d.toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    b.title = when + ': ' + n + ' commit' + (n === 1 ? '' : 's');
+  }
+})();
+
 // Hero grid with "gravity": grid lines bend towards the pointer and glow near it.
 // Everything is drawn locally on a canvas: no network, no storage. It only runs
 // while the pointer is over the hero, and is skipped when the visitor prefers

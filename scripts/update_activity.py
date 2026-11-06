@@ -67,10 +67,12 @@ def level(n):
     return 1 if n == 1 else 2 if n <= 3 else 3 if n <= 6 else 4
 
 
-def bars(counts, labels):
+def bars(counts, labels, isos=None):
+    # isos: optional UTC hour starts; grid.js rewrites those tooltips in the visitor's time zone
     peak = max(counts) or 1
     return "".join(
         f'<i class="bar{" on" if n else ""}" style="--h:{max(12, round(100 * n / peak))}%;--i:{i}" '
+        f'{f"data-h={chr(34)}{isos[i]}{chr(34)} data-n={chr(34)}{n}{chr(34)} " if isos else ""}'
         f'title="{lab}: {n} commit{"s" if n != 1 else ""}"></i>'
         for i, (n, lab) in enumerate(zip(counts, labels)))
 
@@ -81,7 +83,7 @@ def graph(p):
     if age < dt.timedelta(days=3):  # just started: hourly bars, last 48 h
         hours = Counter(t.replace(minute=0, second=0, microsecond=0) for t in p["times"])
         slots = [now.replace(minute=0, second=0, microsecond=0) - dt.timedelta(hours=47 - i) for i in range(48)]
-        return "hourly", "last 48 hours", f'<div class="bars">{bars([hours[h] for h in slots], [f"{fmt(h.date())} {h:%H}:00 UTC" for h in slots])}</div>'
+        return "hourly", "last 48 hours", f'<div class="bars">{bars([hours[h] for h in slots], [f"{fmt(h.date())} {h:%H}:00 UTC" for h in slots], [f"{h:%Y-%m-%dT%H}:00:00Z" for h in slots])}</div>'
     if age < dt.timedelta(weeks=12):  # young: daily calendar matrix, 12 weeks
         days = Counter(t.date() for t in p["times"])
         start = sunday(today) - dt.timedelta(weeks=11)
