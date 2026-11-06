@@ -116,23 +116,21 @@ footer p { margin: 0 0 0.4rem; }
 .svc h3 { color: var(--c); }
 .svc p { margin: 0; font-size: 0.95rem; }
 .svc .ground, .svc .bar, .svc .wires path { stroke: var(--muted); stroke-width: 1.5; fill: none; opacity: 0.5; }
-/* MVP: blocks stack up, then the ship arrow flashes */
-.blk { fill: var(--c); transform-box: fill-box; transform-origin: bottom; animation: stack 4s ease-in-out infinite; }
-.b2 { animation-delay: 0.3s; } .b3 { animation-delay: 0.6s; }
-@keyframes stack { 0% { transform: scaleY(0); } 25%, 85% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
-.ship { stroke: var(--c); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; animation: ship 4s ease-in-out infinite; }
-@keyframes ship { 0%, 30% { opacity: 0; transform: translateY(6px); } 45%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-/* Prototype: dashed frame marches, placeholders fill in */
-.frame { fill: none; stroke: var(--c); stroke-width: 2; stroke-dasharray: 6 5; animation: march 1.5s linear infinite; }
+/* Icons are still by default; a single gentle motion plays on hover or keyboard focus. */
+.blk { fill: var(--c); opacity: 0.85; transform-box: fill-box; transform-origin: bottom; }
+.ship { stroke: var(--c); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.6; }
+.svc:hover .blk, .svc:focus-within .blk { animation: stack 0.7s ease-out backwards; }
+.svc:hover .b2 { animation-delay: 0.1s; } .svc:hover .b3 { animation-delay: 0.2s; }
+@keyframes stack { from { transform: scaleY(0.2); opacity: 0.3; } }
+.frame { fill: none; stroke: var(--c); stroke-width: 2; stroke-dasharray: 6 5; }
+.svc:hover .frame { animation: march 2.5s linear infinite; }
 @keyframes march { to { stroke-dashoffset: -22; } }
 .dot { fill: var(--c); }
-.ph { fill: var(--c); opacity: 0.15; animation: fillin 4s ease-in-out infinite; }
-.w2 { animation-delay: 0.4s; } .w3 { animation-delay: 0.8s; } .w4 { animation-delay: 1.2s; }
-@keyframes fillin { 0%, 10% { opacity: 0.1; } 30%, 80% { opacity: 0.7; } 100% { opacity: 0.1; } }
-/* AI: nodes pulse and a signal runs the hot path */
-.nodes circle { fill: var(--card); stroke: var(--c); stroke-width: 2; animation: node 3s ease-in-out infinite; }
-.nodes circle:nth-child(3n) { animation-delay: 0.5s; } .nodes circle:nth-child(3n+1) { animation-delay: 1s; } .nodes circle:nth-child(n+7) { animation-delay: 1.5s; }
-@keyframes node { 0%, 100% { fill: var(--card); } 50% { fill: var(--c); } }
-.wires.hot path { stroke: var(--c); opacity: 1; stroke-dasharray: 6 40; animation: flow 1.6s linear infinite; }
+.ph { fill: var(--c); opacity: 0.4; transition: opacity 0.4s; }
+.svc:hover .ph { opacity: 0.75; }
+.nodes circle { fill: var(--card); stroke: var(--c); stroke-width: 2; transition: fill 0.4s; }
+.svc:hover .nodes circle { fill: var(--c); }
+.wires.hot path { stroke: var(--c); opacity: 0.8; }
+.svc:hover .wires.hot path { stroke-dasharray: 6 40; animation: flow 2s linear infinite; }
 @keyframes flow { to { stroke-dashoffset: -92; } }
-@media (prefers-reduced-motion: reduce) { .blk, .ship, .frame, .ph, .nodes circle, .wires.hot path { animation: none !important; } .ph { opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) { .svc * { animation: none !important; transition: none !important; } }
