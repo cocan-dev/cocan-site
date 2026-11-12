@@ -14,7 +14,7 @@ MAX_CARDS = 6   # most recently active projects shown
 START_MARK, END_MARK = "<!-- activity:start -->", "<!-- activity:end -->"
 INDEX = Path(__file__).resolve().parent.parent / "index.html"
 # Repos that are not "projects" (e.g. this website) can be listed here.
-HIDE = set()
+HIDE = {"kirpitch-site"}
 
 
 def paged(path):
@@ -54,7 +54,7 @@ for r in paged(f"orgs/{ORG}/repos?type=public&per_page=100"):
         continue
     times = [ts(c["commit"]["author"]["date"]) for c in commits]
     projects.append(dict(
-        name=r["name"], desc=r["description"] or "", url=r["html_url"],
+        name=r["name"], desc=r["description"] or "", url=r["html_url"], home=(r.get("homepage") or "").strip(),
         lic=(r.get("license") or {}).get("spdx_id") or "",
         total=len(times), last=max(times), first=min(times), times=times))
 
@@ -112,8 +112,9 @@ def card(p):
     unit, span, g = graph(p)
     live = " live" if (now - p["last"]).days <= 14 else ""
     lic = f'<span class="badge">{e(p["lic"])}</span>' if p["lic"] and p["lic"] != "NOASSERTION" else ""
+    home = f'<a class="site" href="{e(p["home"])}">{e(re.sub(r"^https?://|/$", "", p["home"]))}</a>' if p["home"].startswith("https://") else ""
     return f'''        <li class="proj p{colour[p["name"]]}{live}">
-          <div class="head"><span class="led" aria-hidden="true"></span><h3><a href="{e(p["url"])}">{e(p["name"])}</a></h3>{lic}</div>
+          <div class="head"><span class="led" aria-hidden="true"></span><h3><a href="{e(p["url"])}">{e(p["name"])}</a></h3>{home}{lic}</div>
           <p class="desc">{e(p["desc"])}</p>
           <div class="graph" role="img" aria-label="{p["total"]} commits, {unit} activity, {span}">{g}</div>
           <p class="meta"><span>{p["total"]} commits · last {fmt(p["last"].date())}</span><span>{unit}</span></p>

@@ -78,6 +78,8 @@ footer p { margin: 0 0 0.4rem; }
 .led { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--line); }
 .proj.live .led { background: var(--c); animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 60%, transparent); } 50% { box-shadow: 0 0 0 6px transparent; } }
+.proj .site { font: 0.7rem var(--mono); color: var(--muted); }
+.proj .site:hover { color: var(--c); }
 .badge { font: 0.7rem var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 0 0.35rem; }
 .proj .desc { font-size: 0.95rem; }
 .graph { height: 3.2rem; }
