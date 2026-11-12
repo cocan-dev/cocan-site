@@ -1,4 +1,4 @@
-﻿name: Deploy site
+name: Deploy site
 
 # Rebuilds the project cards from the public cocan-dev repos and deploys to
 # GitHub Pages. Nothing is committed back; the repo history stays clean.
@@ -33,7 +33,7 @@ jobs:
       - name: Collect site files
         run: |
           mkdir _site
-          cp index.html 404.html style.css favicon.svg robots.txt CNAME _site/
+          cp index.html 404.html privacy.html style.css favicon.svg robots.txt CNAME _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -179,3 +179,4 @@ body { overflow-x: clip; }
 .chip .bio { margin: 0; font-size: 0.95rem; }
 
 .nb { white-space: nowrap; }
+.prose { padding-top: 3rem; } .prose h1 { margin-bottom: 1rem; } .prose h2 { margin-top: 2.2rem; } .prose li { margin: 0 0 0.5rem; } .prose code { font-family: var(--mono); font-size: 0.9em; }
