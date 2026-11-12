@@ -3,112 +3,139 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cocan: MVPs, prototypes and AI-powered tools</title>
-  <meta name="description" content="Cocan is a small tech consultancy building MVPs, prototypes and AI-powered tools.">
+  <title>cocan.dev: we build things that run themselves</title>
+  <meta name="description" content="A small team that automates the boring parts of your work, in software or in hardware.">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="wrap">
-    <a class="logo" href="/">cocan<span>.dev</span></a>
+  <header class="top">
+    <div class="wrap topbar">
+      <a class="logo" href="/">cocan<span>.dev</span></a>
+      <button class="theme" type="button" aria-label="Switch between light and dark theme" title="Light / dark">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle class="rim" cx="12" cy="12" r="9.5"/><path class="half" d="M12 2.5a9.5 9.5 0 0 0 0 19z"/><circle class="pin" cx="12" cy="6" r="1.5"/></svg>
+      </button></div>
   </header>
+  <script>
+    (function () {
+      var r = document.documentElement, k = "theme";
+      try { var s = localStorage.getItem(k); if (s) r.dataset.theme = s; } catch (e) {}
+      document.addEventListener("click", function (e) {
+        var b = e.target.closest(".theme"); if (!b) return;
+        var dark = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+        var next = dark ? "light" : "dark";
+        var apply = function () { r.dataset.theme = next; try { localStorage.setItem(k, next); } catch (e2) {} };
+        if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) { apply(); return; }
+        /* the new theme spreads outward from the button as a wave */
+        var rc = b.getBoundingClientRect(), x = rc.left + rc.width / 2, y = rc.top + rc.height / 2;
+        var end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        var tr = document.startViewTransition(apply);
+        tr.ready.then(function () {
+          r.animate({ clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + end + "px at " + x + "px " + y + "px)"] },
+            { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", pseudoElement: "::view-transition-new(root)" });
+          var ring = document.createElement("div"); ring.className = "wave"; ring.style.left = x + "px"; ring.style.top = y + "px";
+          document.body.appendChild(ring);
+          ring.animate({ transform: ["translate(-50%,-50%) scale(0)", "translate(-50%,-50%) scale(" + (2 * end / 100) + ")"], opacity: [0.9, 0] },
+            { duration: 750, easing: "cubic-bezier(.4,0,.2,1)" }).onfinish = function () { ring.remove(); };
+        });
+      });
+    })();
+  </script>
 
   <main class="wrap">
     <section class="hero">
-      <div class="gridfx" aria-hidden="true"></div>
-      <h1>MVPs, prototypes and AI-powered tools.</h1>
-      <p class="lead">Cocan is a tech consultancy run by a small team of three.</p>
+      
+      <h1>We build things that <span class="nb">run themselves.</span></h1>
+      <p class="lead">Between us, over a decade of automating the boring parts of big companies and over twenty years of designing full systems, hardware and firmware. Now we do it for your idea, in software or in silicon.</p>
       <p><a class="button" href="mailto:hello@cocan.dev">hello@cocan.dev</a></p>
+      <p class="hint" style="margin:0">Set it, forget it, brag about it.</p>
     </section>
 
     <section>
-      <h2>What we do</h2>
+      <h2 id="services">What we do</h2>
       <ul class="svcs">
         <li class="svc s0">
           <div class="head">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V14M12 20V9M20 20V4"/></svg>
-            <h3>MVPs</h3>
+            <h3>Automation</h3>
           </div>
-          <p>The smallest version of your product, software or hardware, that is worth shipping, built so you can learn from real users quickly.</p>
+          <p>The work that repeats, done by software. Filing, chasing, re-typing, sorting the inbox. We use plain scripts and workflows, and language-model agents (the chat-style AI) where they actually help. Ordinary code does the rest, so you can check what it did.<br><br><em>Invoices that file themselves. An inbox that sorts itself. Reports that write themselves.</em></p>
         </li>
         <li class="svc s1">
           <div class="head">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" stroke-dasharray="3 2.5"/><path d="M3 9h18"/></svg>
-            <h3>Prototypes</h3>
+            <h3>Hardware and firmware</h3>
           </div>
-          <p>Working proofs of concept, in software or hardware, to test an idea, a technology or a workflow before committing to it.</p>
-        </li>
-        <li class="svc s2">
-          <div class="head">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 6l10 6M7 18l10-6"/></svg>
-            <h3>AI-powered tools</h3>
-          </div>
-          <p>Practical tools that use large language models where they help, with deterministic code doing the rest.</p>
+          <p>Complete systems, designed as one: the board and the code that runs on it. From schematic to a prototype you can hold. We take this work when it comes to us or when it pairs with automation.</p>
         </li>
       </ul>
-      <p class="more"><a href="mailto:hello@cocan.dev?subject=New%20project%20idea&amp;body=Hi%20Cocan%2C%0A%0AWhat%20do%20you%20want%20to%20build%3F%0A%0A%0ASoftware%2C%20AI%2C%20hardware%2C%20or%20a%20mix%3F%0A%0A%0AWho%20is%20it%20for%3F%0A%0A%0ARough%20timeline%20and%20budget%20%28if%20you%20have%20them%29%3A%0A%0A%0AAnything%20we%20should%20read%20first%20%28links%2C%20sketches%29%3F%0A%0A%0AThanks%2C%0A">Tell us about your idea →</a> <span class="hint">or write to hello@cocan.dev</span></p>
+      <p class="more"><a href="mailto:hello@cocan.dev?subject=New%20project%20idea&amp;body=Hi%20cocan.dev%2C%0A%0AWhat%20do%20you%20want%20to%20build%3F%0A%0A%0ASoftware%2C%20AI%2C%20hardware%2C%20or%20a%20mix%3F%0A%0A%0AWho%20is%20it%20for%3F%0A%0A%0ARough%20timeline%20and%20budget%20%28if%20you%20have%20them%29%3A%0A%0A%0AAnything%20we%20should%20read%20first%20%28links%2C%20sketches%29%3F%0A%0A%0AThanks%2C%0A">Tell us about your idea →</a> <span class="hint">or write to hello@cocan.dev</span></p>
     </section>
 
     <section>
       <h2>How we work</h2>
       <ol class="steps">
         <li><span class="n">01</span><h3>You write to us</h3><p>Tell us about your idea. We reply within three working days.</p></li>
-        <li><span class="n">02</span><h3>Free scoping call</h3><p>One call, about 30 to 45 minutes, to understand what you want to build.</p></li>
-        <li><span class="n">03</span><h3>Written proposal</h3><p>Scope, timeline and price in writing. For uncertain ideas we may suggest a short, paid feasibility study first.</p></li>
-        <li><span class="n">04</span><h3>We build</h3><p>In short iterations, with something you can try every week or two.</p></li>
+        <li><span class="n">02</span><h3>A free call</h3><p>One call, about 30 to 45 minutes, so we understand what you want.</p></li>
+        <li><span class="n">03</span><h3>A written proposal</h3><p>Scope, timeline and price, in writing. If the idea has real unknowns, we may suggest a short paid feasibility study first.</p></li>
+        <li><span class="n">04</span><h3>We build</h3><p>In short steps, with something you can try every week or two.</p></li>
       </ol>
     </section>
 
     <!-- TODO: add each person's email here once the Tuta family mailboxes exist. -->
     <section>
-      <h2>Team</h2>
+      <h2 id="team">Team</h2>
       <ul class="team">
         <li class="chip c1">
           <svg viewBox="0 0 120 120" role="img" aria-label="Generated chip-style avatar for Anna">
             <g class="pins"><rect x="23.0" y="4" width="6" height="12" rx="1.5"/><rect x="23.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="23.0" width="12" height="6" rx="1.5"/><rect x="104" y="23.0" width="12" height="6" rx="1.5"/><rect x="40.0" y="4" width="6" height="12" rx="1.5"/><rect x="40.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="40.0" width="12" height="6" rx="1.5"/><rect x="104" y="40.0" width="12" height="6" rx="1.5"/><rect x="57.0" y="4" width="6" height="12" rx="1.5"/><rect x="57.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="57.0" width="12" height="6" rx="1.5"/><rect x="104" y="57.0" width="12" height="6" rx="1.5"/><rect x="74.0" y="4" width="6" height="12" rx="1.5"/><rect x="74.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="74.0" width="12" height="6" rx="1.5"/><rect x="104" y="74.0" width="12" height="6" rx="1.5"/><rect x="91.0" y="4" width="6" height="12" rx="1.5"/><rect x="91.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="91.0" width="12" height="6" rx="1.5"/><rect x="104" y="91.0" width="12" height="6" rx="1.5"/></g>
             <rect class="body" x="16" y="16" width="88" height="88" rx="8"/>
             <circle class="pin1" cx="26" cy="26" r="3"/>
-            <g class="die"><rect x="34" y="34" width="9" height="9" rx="1.5"/><rect x="74" y="34" width="9" height="9" rx="1.5"/><rect x="34" y="44" width="9" height="9" rx="1.5"/><rect x="44" y="44" width="9" height="9" rx="1.5"/><rect x="64" y="44" width="9" height="9" rx="1.5"/><rect x="74" y="44" width="9" height="9" rx="1.5"/><rect x="34" y="54" width="9" height="9" rx="1.5"/><rect x="44" y="54" width="9" height="9" rx="1.5"/><rect x="64" y="54" width="9" height="9" rx="1.5"/><rect x="74" y="54" width="9" height="9" rx="1.5"/><rect x="44" y="64" width="9" height="9" rx="1.5"/><rect x="54" y="64" width="9" height="9" rx="1.5"/><rect x="64" y="64" width="9" height="9" rx="1.5"/><rect x="34" y="74" width="9" height="9" rx="1.5"/><rect x="74" y="74" width="9" height="9" rx="1.5"/></g>
-          </svg>
+            <g class="die"><rect x="34" y="34" width="9" height="9" rx="1.5"/><rect x="74" y="34" width="9" height="9" rx="1.5"/><rect x="34" y="44" width="9" height="9" rx="1.5"/><rect x="44" y="44" width="9" height="9" rx="1.5"/><rect x="64" y="44" width="9" height="9" rx="1.5"/><rect x="74" y="44" width="9" height="9" rx="1.5"/><rect x="34" y="54" width="9" height="9" rx="1.5"/><rect x="44" y="54" width="9" height="9" rx="1.5"/><rect x="64" y="54" width="9" height="9" rx="1.5"/><rect x="74" y="54" width="9" height="9" rx="1.5"/><rect x="44" y="64" width="9" height="9" rx="1.5"/><rect x="54" y="64" width="9" height="9" rx="1.5"/><rect x="64" y="64" width="9" height="9" rx="1.5"/><rect x="34" y="74" width="9" height="9" rx="1.5"/><rect x="74" y="74" width="9" height="9" rx="1.5"/></g></svg>
           <h3>Anna</h3>
+          <p class="role">Project lead</p>
+          <p class="bio">Keeps projects on track and is your first point of contact. About five years of automating processes, from plain workflows to language-model agents.</p>
         </li>
         <li class="chip c2">
           <svg viewBox="0 0 120 120" role="img" aria-label="Generated chip-style avatar for Alex">
             <g class="pins"><rect x="23.0" y="4" width="6" height="12" rx="1.5"/><rect x="23.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="23.0" width="12" height="6" rx="1.5"/><rect x="104" y="23.0" width="12" height="6" rx="1.5"/><rect x="40.0" y="4" width="6" height="12" rx="1.5"/><rect x="40.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="40.0" width="12" height="6" rx="1.5"/><rect x="104" y="40.0" width="12" height="6" rx="1.5"/><rect x="57.0" y="4" width="6" height="12" rx="1.5"/><rect x="57.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="57.0" width="12" height="6" rx="1.5"/><rect x="104" y="57.0" width="12" height="6" rx="1.5"/><rect x="74.0" y="4" width="6" height="12" rx="1.5"/><rect x="74.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="74.0" width="12" height="6" rx="1.5"/><rect x="104" y="74.0" width="12" height="6" rx="1.5"/><rect x="91.0" y="4" width="6" height="12" rx="1.5"/><rect x="91.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="91.0" width="12" height="6" rx="1.5"/><rect x="104" y="91.0" width="12" height="6" rx="1.5"/></g>
             <rect class="body" x="16" y="16" width="88" height="88" rx="8"/>
             <circle class="pin1" cx="26" cy="26" r="3"/>
-            <g class="die"><rect x="34" y="44" width="9" height="9" rx="1.5"/><rect x="54" y="44" width="9" height="9" rx="1.5"/><rect x="74" y="44" width="9" height="9" rx="1.5"/><rect x="34" y="54" width="9" height="9" rx="1.5"/><rect x="44" y="54" width="9" height="9" rx="1.5"/><rect x="54" y="54" width="9" height="9" rx="1.5"/><rect x="64" y="54" width="9" height="9" rx="1.5"/><rect x="74" y="54" width="9" height="9" rx="1.5"/><rect x="34" y="64" width="9" height="9" rx="1.5"/><rect x="44" y="64" width="9" height="9" rx="1.5"/><rect x="54" y="64" width="9" height="9" rx="1.5"/><rect x="64" y="64" width="9" height="9" rx="1.5"/><rect x="74" y="64" width="9" height="9" rx="1.5"/><rect x="34" y="74" width="9" height="9" rx="1.5"/><rect x="44" y="74" width="9" height="9" rx="1.5"/><rect x="64" y="74" width="9" height="9" rx="1.5"/><rect x="74" y="74" width="9" height="9" rx="1.5"/></g>
-          </svg>
+            <g class="die"><rect x="34" y="44" width="9" height="9" rx="1.5"/><rect x="54" y="44" width="9" height="9" rx="1.5"/><rect x="74" y="44" width="9" height="9" rx="1.5"/><rect x="34" y="54" width="9" height="9" rx="1.5"/><rect x="44" y="54" width="9" height="9" rx="1.5"/><rect x="54" y="54" width="9" height="9" rx="1.5"/><rect x="64" y="54" width="9" height="9" rx="1.5"/><rect x="74" y="54" width="9" height="9" rx="1.5"/><rect x="34" y="64" width="9" height="9" rx="1.5"/><rect x="44" y="64" width="9" height="9" rx="1.5"/><rect x="54" y="64" width="9" height="9" rx="1.5"/><rect x="64" y="64" width="9" height="9" rx="1.5"/><rect x="74" y="64" width="9" height="9" rx="1.5"/><rect x="34" y="74" width="9" height="9" rx="1.5"/><rect x="44" y="74" width="9" height="9" rx="1.5"/><rect x="64" y="74" width="9" height="9" rx="1.5"/><rect x="74" y="74" width="9" height="9" rx="1.5"/></g></svg>
           <h3>Alex</h3>
+          <p class="role">Hardware and firmware</p>
+          <p class="bio">More than a decade designing full systems, hardware and firmware together, from schematic to a prototype you can hold.</p>
         </li>
         <li class="chip c3">
           <svg viewBox="0 0 120 120" role="img" aria-label="Generated chip-style avatar for Niky">
             <g class="pins"><rect x="23.0" y="4" width="6" height="12" rx="1.5"/><rect x="23.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="23.0" width="12" height="6" rx="1.5"/><rect x="104" y="23.0" width="12" height="6" rx="1.5"/><rect x="40.0" y="4" width="6" height="12" rx="1.5"/><rect x="40.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="40.0" width="12" height="6" rx="1.5"/><rect x="104" y="40.0" width="12" height="6" rx="1.5"/><rect x="57.0" y="4" width="6" height="12" rx="1.5"/><rect x="57.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="57.0" width="12" height="6" rx="1.5"/><rect x="104" y="57.0" width="12" height="6" rx="1.5"/><rect x="74.0" y="4" width="6" height="12" rx="1.5"/><rect x="74.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="74.0" width="12" height="6" rx="1.5"/><rect x="104" y="74.0" width="12" height="6" rx="1.5"/><rect x="91.0" y="4" width="6" height="12" rx="1.5"/><rect x="91.0" y="104" width="6" height="12" rx="1.5"/><rect x="4" y="91.0" width="12" height="6" rx="1.5"/><rect x="104" y="91.0" width="12" height="6" rx="1.5"/></g>
             <rect class="body" x="16" y="16" width="88" height="88" rx="8"/>
             <circle class="pin1" cx="26" cy="26" r="3"/>
-            <g class="die"><rect x="44" y="34" width="9" height="9" rx="1.5"/><rect x="64" y="34" width="9" height="9" rx="1.5"/><rect x="54" y="44" width="9" height="9" rx="1.5"/><rect x="44" y="54" width="9" height="9" rx="1.5"/><rect x="54" y="54" width="9" height="9" rx="1.5"/><rect x="64" y="54" width="9" height="9" rx="1.5"/><rect x="34" y="64" width="9" height="9" rx="1.5"/><rect x="74" y="64" width="9" height="9" rx="1.5"/><rect x="34" y="74" width="9" height="9" rx="1.5"/><rect x="44" y="74" width="9" height="9" rx="1.5"/><rect x="64" y="74" width="9" height="9" rx="1.5"/><rect x="74" y="74" width="9" height="9" rx="1.5"/></g>
-          </svg>
+            <g class="die"><rect x="44" y="34" width="9" height="9" rx="1.5"/><rect x="64" y="34" width="9" height="9" rx="1.5"/><rect x="54" y="44" width="9" height="9" rx="1.5"/><rect x="44" y="54" width="9" height="9" rx="1.5"/><rect x="54" y="54" width="9" height="9" rx="1.5"/><rect x="64" y="54" width="9" height="9" rx="1.5"/><rect x="34" y="64" width="9" height="9" rx="1.5"/><rect x="74" y="64" width="9" height="9" rx="1.5"/><rect x="34" y="74" width="9" height="9" rx="1.5"/><rect x="44" y="74" width="9" height="9" rx="1.5"/><rect x="64" y="74" width="9" height="9" rx="1.5"/><rect x="74" y="74" width="9" height="9" rx="1.5"/></g></svg>
           <h3>Niky</h3>
+          <p class="role">Automation and open source</p>
+          <p class="bio">Ten years designing full systems, hardware and firmware, then seven or eight of automating processes inside large companies. Works across both, and builds kirpitch, our open-source tool that turns datasheets into KiCad parts.</p>
         </li>
       </ul>
     </section>
 
     <section>
-      <h2>Open source</h2>
+      <h2 id="open-source">Open source</h2>
+      <p class="lead" style="font-size:1rem">What we build for ourselves, in the open.</p>
       <!-- activity:start -->
       <ul class="projects">
         <li class="proj p1 live">
           <div class="head"><span class="led" aria-hidden="true"></span><h3><a href="https://github.com/cocan-dev/kirpitch">kirpitch</a></h3><span class="badge">GPL-3.0</span></div>
           <p class="desc">Turn component and connector datasheets into reviewed KiCad parts: symbol, footprint, 3D model and SPICE model.</p>
-          <div class="graph" role="img" aria-label="53 commits, hourly activity, last 48 hours"><div class="bars"><i class="bar" style="--h:12%;--i:0" data-h="2026-11-04T19:00:00Z" data-n="0" title="4 Nov 2026 19:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:1" data-h="2026-11-04T20:00:00Z" data-n="0" title="4 Nov 2026 20:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:2" data-h="2026-11-04T21:00:00Z" data-n="0" title="4 Nov 2026 21:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:3" data-h="2026-11-04T22:00:00Z" data-n="0" title="4 Nov 2026 22:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:4" data-h="2026-11-04T23:00:00Z" data-n="0" title="4 Nov 2026 23:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:5" data-h="2026-11-05T00:00:00Z" data-n="0" title="5 Nov 2026 00:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:6" data-h="2026-11-05T01:00:00Z" data-n="0" title="5 Nov 2026 01:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:7" data-h="2026-11-05T02:00:00Z" data-n="0" title="5 Nov 2026 02:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:8" data-h="2026-11-05T03:00:00Z" data-n="0" title="5 Nov 2026 03:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:9" data-h="2026-11-05T04:00:00Z" data-n="0" title="5 Nov 2026 04:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:10" data-h="2026-11-05T05:00:00Z" data-n="0" title="5 Nov 2026 05:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:11" data-h="2026-11-05T06:00:00Z" data-n="0" title="5 Nov 2026 06:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:12" data-h="2026-11-05T07:00:00Z" data-n="0" title="5 Nov 2026 07:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:13" data-h="2026-11-05T08:00:00Z" data-n="0" title="5 Nov 2026 08:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:14" data-h="2026-11-05T09:00:00Z" data-n="0" title="5 Nov 2026 09:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:15" data-h="2026-11-05T10:00:00Z" data-n="0" title="5 Nov 2026 10:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:16" data-h="2026-11-05T11:00:00Z" data-n="0" title="5 Nov 2026 11:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:17" data-h="2026-11-05T12:00:00Z" data-n="0" title="5 Nov 2026 12:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:18" data-h="2026-11-05T13:00:00Z" data-n="0" title="5 Nov 2026 13:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:19" data-h="2026-11-05T14:00:00Z" data-n="0" title="5 Nov 2026 14:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:20" data-h="2026-11-05T15:00:00Z" data-n="0" title="5 Nov 2026 15:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:21" data-h="2026-11-05T16:00:00Z" data-n="0" title="5 Nov 2026 16:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:22" data-h="2026-11-05T17:00:00Z" data-n="0" title="5 Nov 2026 17:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:23" data-h="2026-11-05T18:00:00Z" data-n="0" title="5 Nov 2026 18:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:24" data-h="2026-11-05T19:00:00Z" data-n="0" title="5 Nov 2026 19:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:25" data-h="2026-11-05T20:00:00Z" data-n="0" title="5 Nov 2026 20:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:26" data-h="2026-11-05T21:00:00Z" data-n="0" title="5 Nov 2026 21:00 UTC: 0 commits"></i><i class="bar on" style="--h:12%;--i:27" data-h="2026-11-05T22:00:00Z" data-n="1" title="5 Nov 2026 22:00 UTC: 1 commit"></i><i class="bar on" style="--h:73%;--i:28" data-h="2026-11-05T23:00:00Z" data-n="8" title="5 Nov 2026 23:00 UTC: 8 commits"></i><i class="bar on" style="--h:91%;--i:29" data-h="2026-11-06T00:00:00Z" data-n="10" title="6 Nov 2026 00:00 UTC: 10 commits"></i><i class="bar on" style="--h:100%;--i:30" data-h="2026-11-06T01:00:00Z" data-n="11" title="6 Nov 2026 01:00 UTC: 11 commits"></i><i class="bar" style="--h:12%;--i:31" data-h="2026-11-06T02:00:00Z" data-n="0" title="6 Nov 2026 02:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:32" data-h="2026-11-06T03:00:00Z" data-n="0" title="6 Nov 2026 03:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:33" data-h="2026-11-06T04:00:00Z" data-n="0" title="6 Nov 2026 04:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:34" data-h="2026-11-06T05:00:00Z" data-n="0" title="6 Nov 2026 05:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:35" data-h="2026-11-06T06:00:00Z" data-n="0" title="6 Nov 2026 06:00 UTC: 0 commits"></i><i class="bar on" style="--h:18%;--i:36" data-h="2026-11-06T07:00:00Z" data-n="2" title="6 Nov 2026 07:00 UTC: 2 commits"></i><i class="bar on" style="--h:27%;--i:37" data-h="2026-11-06T08:00:00Z" data-n="3" title="6 Nov 2026 08:00 UTC: 3 commits"></i><i class="bar on" style="--h:27%;--i:38" data-h="2026-11-06T09:00:00Z" data-n="3" title="6 Nov 2026 09:00 UTC: 3 commits"></i><i class="bar on" style="--h:27%;--i:39" data-h="2026-11-06T10:00:00Z" data-n="3" title="6 Nov 2026 10:00 UTC: 3 commits"></i><i class="bar on" style="--h:18%;--i:40" data-h="2026-11-06T11:00:00Z" data-n="2" title="6 Nov 2026 11:00 UTC: 2 commits"></i><i class="bar on" style="--h:27%;--i:41" data-h="2026-11-06T12:00:00Z" data-n="3" title="6 Nov 2026 12:00 UTC: 3 commits"></i><i class="bar on" style="--h:27%;--i:42" data-h="2026-11-06T13:00:00Z" data-n="3" title="6 Nov 2026 13:00 UTC: 3 commits"></i><i class="bar on" style="--h:12%;--i:43" data-h="2026-11-06T14:00:00Z" data-n="1" title="6 Nov 2026 14:00 UTC: 1 commit"></i><i class="bar on" style="--h:12%;--i:44" data-h="2026-11-06T15:00:00Z" data-n="1" title="6 Nov 2026 15:00 UTC: 1 commit"></i><i class="bar" style="--h:12%;--i:45" data-h="2026-11-06T16:00:00Z" data-n="0" title="6 Nov 2026 16:00 UTC: 0 commits"></i><i class="bar on" style="--h:18%;--i:46" data-h="2026-11-06T17:00:00Z" data-n="2" title="6 Nov 2026 17:00 UTC: 2 commits"></i><i class="bar" style="--h:12%;--i:47" data-h="2026-11-06T18:00:00Z" data-n="0" title="6 Nov 2026 18:00 UTC: 0 commits"></i></div></div>
-          <p class="meta"><span>53 commits · last 6 Nov 2026</span><span>hourly</span></p>
+          <div class="graph" role="img" aria-label="89 commits, daily activity, last 12 weeks"><div class="matrix"><i class="cell" style="--i:0" title="23 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="24 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="25 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="26 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="27 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="28 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="29 Aug 2026: 0 commits"></i><i class="cell" style="--i:1" title="30 Aug 2026: 0 commits"></i><i class="cell" style="--i:1" title="31 Aug 2026: 0 commits"></i><i class="cell" style="--i:1" title="1 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="2 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="3 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="4 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="5 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="6 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="7 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="8 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="9 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="10 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="11 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="12 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="13 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="14 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="15 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="16 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="17 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="18 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="19 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="20 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="21 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="22 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="23 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="24 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="25 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="26 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="27 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="28 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="29 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="30 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="1 Oct 2026: 0 commits"></i><i class="cell" style="--i:5" title="2 Oct 2026: 0 commits"></i><i class="cell" style="--i:5" title="3 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="4 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="5 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="6 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="7 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="8 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="9 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="10 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="11 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="12 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="13 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="14 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="15 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="16 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="17 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="18 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="19 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="20 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="21 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="22 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="23 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="24 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="25 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="26 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="27 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="28 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="29 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="30 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="31 Oct 2026: 0 commits"></i><i class="cell" style="--i:10" title="1 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="2 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="3 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="4 Nov 2026: 0 commits"></i><i class="cell on l4" style="--i:10" title="5 Nov 2026: 9 commits"></i><i class="cell on l4" style="--i:10" title="6 Nov 2026: 61 commits"></i><i class="cell on l4" style="--i:10" title="7 Nov 2026: 18 commits"></i><i class="cell on l1" style="--i:11" title="8 Nov 2026: 1 commit"></i><i class="cell" style="--i:11" title="9 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="10 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="11 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="12 Nov 2026: 0 commits"></i><i class="cell future"></i><i class="cell future"></i></div></div>
+          <p class="meta"><span>89 commits · last 8 Nov 2026</span><span>daily</span></p>
         </li>
         <li class="proj p0 live">
           <div class="head"><span class="led" aria-hidden="true"></span><h3><a href="https://github.com/cocan-dev/cocan-site">cocan-site</a></h3></div>
           <p class="desc">Static site for cocan.dev</p>
-          <div class="graph" role="img" aria-label="18 commits, hourly activity, last 48 hours"><div class="bars"><i class="bar" style="--h:12%;--i:0" data-h="2026-11-04T19:00:00Z" data-n="0" title="4 Nov 2026 19:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:1" data-h="2026-11-04T20:00:00Z" data-n="0" title="4 Nov 2026 20:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:2" data-h="2026-11-04T21:00:00Z" data-n="0" title="4 Nov 2026 21:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:3" data-h="2026-11-04T22:00:00Z" data-n="0" title="4 Nov 2026 22:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:4" data-h="2026-11-04T23:00:00Z" data-n="0" title="4 Nov 2026 23:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:5" data-h="2026-11-05T00:00:00Z" data-n="0" title="5 Nov 2026 00:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:6" data-h="2026-11-05T01:00:00Z" data-n="0" title="5 Nov 2026 01:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:7" data-h="2026-11-05T02:00:00Z" data-n="0" title="5 Nov 2026 02:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:8" data-h="2026-11-05T03:00:00Z" data-n="0" title="5 Nov 2026 03:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:9" data-h="2026-11-05T04:00:00Z" data-n="0" title="5 Nov 2026 04:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:10" data-h="2026-11-05T05:00:00Z" data-n="0" title="5 Nov 2026 05:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:11" data-h="2026-11-05T06:00:00Z" data-n="0" title="5 Nov 2026 06:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:12" data-h="2026-11-05T07:00:00Z" data-n="0" title="5 Nov 2026 07:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:13" data-h="2026-11-05T08:00:00Z" data-n="0" title="5 Nov 2026 08:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:14" data-h="2026-11-05T09:00:00Z" data-n="0" title="5 Nov 2026 09:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:15" data-h="2026-11-05T10:00:00Z" data-n="0" title="5 Nov 2026 10:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:16" data-h="2026-11-05T11:00:00Z" data-n="0" title="5 Nov 2026 11:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:17" data-h="2026-11-05T12:00:00Z" data-n="0" title="5 Nov 2026 12:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:18" data-h="2026-11-05T13:00:00Z" data-n="0" title="5 Nov 2026 13:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:19" data-h="2026-11-05T14:00:00Z" data-n="0" title="5 Nov 2026 14:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:20" data-h="2026-11-05T15:00:00Z" data-n="0" title="5 Nov 2026 15:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:21" data-h="2026-11-05T16:00:00Z" data-n="0" title="5 Nov 2026 16:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:22" data-h="2026-11-05T17:00:00Z" data-n="0" title="5 Nov 2026 17:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:23" data-h="2026-11-05T18:00:00Z" data-n="0" title="5 Nov 2026 18:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:24" data-h="2026-11-05T19:00:00Z" data-n="0" title="5 Nov 2026 19:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:25" data-h="2026-11-05T20:00:00Z" data-n="0" title="5 Nov 2026 20:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:26" data-h="2026-11-05T21:00:00Z" data-n="0" title="5 Nov 2026 21:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:27" data-h="2026-11-05T22:00:00Z" data-n="0" title="5 Nov 2026 22:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:28" data-h="2026-11-05T23:00:00Z" data-n="0" title="5 Nov 2026 23:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:29" data-h="2026-11-06T00:00:00Z" data-n="0" title="6 Nov 2026 00:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:30" data-h="2026-11-06T01:00:00Z" data-n="0" title="6 Nov 2026 01:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:31" data-h="2026-11-06T02:00:00Z" data-n="0" title="6 Nov 2026 02:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:32" data-h="2026-11-06T03:00:00Z" data-n="0" title="6 Nov 2026 03:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:33" data-h="2026-11-06T04:00:00Z" data-n="0" title="6 Nov 2026 04:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:34" data-h="2026-11-06T05:00:00Z" data-n="0" title="6 Nov 2026 05:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:35" data-h="2026-11-06T06:00:00Z" data-n="0" title="6 Nov 2026 06:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:36" data-h="2026-11-06T07:00:00Z" data-n="0" title="6 Nov 2026 07:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:37" data-h="2026-11-06T08:00:00Z" data-n="0" title="6 Nov 2026 08:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:38" data-h="2026-11-06T09:00:00Z" data-n="0" title="6 Nov 2026 09:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:39" data-h="2026-11-06T10:00:00Z" data-n="0" title="6 Nov 2026 10:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:40" data-h="2026-11-06T11:00:00Z" data-n="0" title="6 Nov 2026 11:00 UTC: 0 commits"></i><i class="bar" style="--h:12%;--i:41" data-h="2026-11-06T12:00:00Z" data-n="0" title="6 Nov 2026 12:00 UTC: 0 commits"></i><i class="bar on" style="--h:78%;--i:42" data-h="2026-11-06T13:00:00Z" data-n="7" title="6 Nov 2026 13:00 UTC: 7 commits"></i><i class="bar on" style="--h:100%;--i:43" data-h="2026-11-06T14:00:00Z" data-n="9" title="6 Nov 2026 14:00 UTC: 9 commits"></i><i class="bar on" style="--h:12%;--i:44" data-h="2026-11-06T15:00:00Z" data-n="1" title="6 Nov 2026 15:00 UTC: 1 commit"></i><i class="bar" style="--h:12%;--i:45" data-h="2026-11-06T16:00:00Z" data-n="0" title="6 Nov 2026 16:00 UTC: 0 commits"></i><i class="bar on" style="--h:12%;--i:46" data-h="2026-11-06T17:00:00Z" data-n="1" title="6 Nov 2026 17:00 UTC: 1 commit"></i><i class="bar" style="--h:12%;--i:47" data-h="2026-11-06T18:00:00Z" data-n="0" title="6 Nov 2026 18:00 UTC: 0 commits"></i></div></div>
-          <p class="meta"><span>18 commits · last 6 Nov 2026</span><span>hourly</span></p>
+          <div class="graph" role="img" aria-label="19 commits, daily activity, last 12 weeks"><div class="matrix"><i class="cell" style="--i:0" title="23 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="24 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="25 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="26 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="27 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="28 Aug 2026: 0 commits"></i><i class="cell" style="--i:0" title="29 Aug 2026: 0 commits"></i><i class="cell" style="--i:1" title="30 Aug 2026: 0 commits"></i><i class="cell" style="--i:1" title="31 Aug 2026: 0 commits"></i><i class="cell" style="--i:1" title="1 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="2 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="3 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="4 Sep 2026: 0 commits"></i><i class="cell" style="--i:1" title="5 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="6 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="7 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="8 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="9 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="10 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="11 Sep 2026: 0 commits"></i><i class="cell" style="--i:2" title="12 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="13 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="14 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="15 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="16 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="17 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="18 Sep 2026: 0 commits"></i><i class="cell" style="--i:3" title="19 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="20 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="21 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="22 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="23 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="24 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="25 Sep 2026: 0 commits"></i><i class="cell" style="--i:4" title="26 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="27 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="28 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="29 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="30 Sep 2026: 0 commits"></i><i class="cell" style="--i:5" title="1 Oct 2026: 0 commits"></i><i class="cell" style="--i:5" title="2 Oct 2026: 0 commits"></i><i class="cell" style="--i:5" title="3 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="4 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="5 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="6 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="7 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="8 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="9 Oct 2026: 0 commits"></i><i class="cell" style="--i:6" title="10 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="11 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="12 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="13 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="14 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="15 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="16 Oct 2026: 0 commits"></i><i class="cell" style="--i:7" title="17 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="18 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="19 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="20 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="21 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="22 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="23 Oct 2026: 0 commits"></i><i class="cell" style="--i:8" title="24 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="25 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="26 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="27 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="28 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="29 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="30 Oct 2026: 0 commits"></i><i class="cell" style="--i:9" title="31 Oct 2026: 0 commits"></i><i class="cell" style="--i:10" title="1 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="2 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="3 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="4 Nov 2026: 0 commits"></i><i class="cell" style="--i:10" title="5 Nov 2026: 0 commits"></i><i class="cell on l4" style="--i:10" title="6 Nov 2026: 19 commits"></i><i class="cell" style="--i:10" title="7 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="8 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="9 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="10 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="11 Nov 2026: 0 commits"></i><i class="cell" style="--i:11" title="12 Nov 2026: 0 commits"></i><i class="cell future"></i><i class="cell future"></i></div></div>
+          <p class="meta"><span>19 commits · last 6 Nov 2026</span><span>daily</span></p>
         </li>
       </ul>
       <p class="more"><a href="https://github.com/orgs/cocan-dev/repositories">All repositories on GitHub →</a></p>
@@ -122,9 +149,88 @@
   </main>
 
   <footer class="wrap">
-    <p>Cocan is an early-stage project, not a registered company. This site has no cookies, no analytics and no third-party requests.</p>
+    <p>cocan.dev is an early-stage project, not a registered company. This site has no cookies, no analytics and no third-party requests.</p>
     <p><a href="https://github.com/cocan-dev">GitHub</a></p>
   </footer>
-  <script src="grid.js" defer></script>
+<script>
+/* hourly activity bars: show the tooltip in the visitor's own time zone (the UTC text stays as the fallback) */
+(function () {
+  document.querySelectorAll('.bar[data-h]').forEach(function (b) {
+    var d = new Date(b.getAttribute('data-h')), n = +b.getAttribute('data-n');
+    if (isNaN(d)) return;
+    b.title = d.toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ': ' + n + ' commit' + (n === 1 ? '' : 's');
+  });
+})();
+</script>
+<script>
+/* hero background: slow signal lines with data pulses; the pointer acts as a gravity well (canvas, decorative) */
+(function () {
+  var hero = document.querySelector('.hero');
+  var cv = document.createElement('canvas'); cv.className = 'bgc'; cv.setAttribute('aria-hidden', 'true');
+  hero.insertBefore(cv, hero.firstChild);
+  var ctx = cv.getContext('2d'), root = document.documentElement;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0, H = 0, dpr = 1, cols, visible = true, t0 = performance.now();
+  function hex(s) { s = s.trim(); if (s.length === 4) s = '#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]; return [parseInt(s.slice(1, 3), 16), parseInt(s.slice(3, 5), 16), parseInt(s.slice(5, 7), 16)]; }
+  function readColors() {
+    var cs = getComputedStyle(root), bg = hex(cs.getPropertyValue('--bg')), dark = (bg[0] + bg[1] + bg[2]) < 300;
+    cols = { fg: hex(cs.getPropertyValue('--fg')), ac: hex(cs.getPropertyValue('--accent')), alt: dark ? [79, 209, 184] : [15, 118, 110] };
+  }
+  function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+  var N = 34;
+  /* gravity: every point is pulled toward the pointer along the line between them; the pull fades with distance,
+     so lines curve concentrically around the pointer like light bending around a mass */
+  var mx = -9999, my = -9999, tx = -9999, ty = -9999, pw = 0, want = 0, A = 0.62, R2 = 230 * 230, px = 0, py = 0;
+  function pt(j, x, t) {
+    var y = H * (0.06 + 0.88 * j / (N - 1)) + 24 * Math.sin(x * 0.0045 + t * 0.18 + j * 0.14) + 10 * Math.sin(x * 0.012 - t * 0.12 + j * 0.31);
+    if (pw > 0.002) {
+      var dx = mx - x, dy = my - y, f = A * pw * Math.exp(-(dx * dx + dy * dy) / R2);
+      x += dx * f; y += dy * f;
+    }
+    px = x; py = y;
+  }
+  if (!reduce) {
+    document.addEventListener('pointermove', function (e) {
+      var r = cv.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top;
+      want = (ty > -60 && ty < r.height + 60) ? 1 : 0;
+      if (pw < 0.01) { mx = tx; my = ty; }
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', function () { want = 0; });
+  }
+  function ease() { mx += (tx - mx) * 0.16; my += (ty - my) * 0.16; pw += (want - pw) * 0.07; }
+  function draw(t) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    var j, x;
+    if (pw > 0.01) {
+      var g = ctx.createRadialGradient(mx, my, 0, mx, my, 150);
+      g.addColorStop(0, rgba(cols.ac, 0.09 * pw)); g.addColorStop(1, rgba(cols.ac, 0));
+      ctx.fillStyle = g; ctx.fillRect(mx - 150, my - 150, 300, 300);
+    }
+    ctx.lineWidth = 1; ctx.strokeStyle = rgba(cols.fg, 0.085);
+    for (j = 0; j < N; j++) {
+      ctx.beginPath();
+      for (x = 0; x <= W + 6; x += 6) { pt(j, x, t); if (x === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }
+      ctx.stroke();
+    }
+    if (reduce) return;
+    for (var p = 0; p < 7; p++) {
+      j = (p * 5 + 2) % N;
+      var head = (((t * (0.05 + (p % 3) * 0.015) + p * 0.19) % 1.4) - 0.2) * W, col = p % 3 === 1 ? cols.alt : cols.ac;
+      for (var s = 0; s < 14; s++) {
+        var x0 = head - s * 12, x1 = x0 - 12; if (x1 < 0 || x0 > W) continue;
+        ctx.strokeStyle = rgba(col, 0.75 * (1 - s / 14)); ctx.lineWidth = 1.8;
+        ctx.beginPath(); pt(j, x0, t); ctx.moveTo(px, py); pt(j, x1, t); ctx.lineTo(px, py); ctx.stroke();
+      }
+    }
+  }
+  function frame(now) { ease(); if (visible) draw((now - t0) / 1000); if (!reduce) requestAnimationFrame(frame); }
+  function resize() { dpr = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); readColors(); draw((performance.now() - t0) / 1000); }
+  new ResizeObserver(resize).observe(cv);
+  new MutationObserver(function () { readColors(); if (reduce) draw(0); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { readColors(); if (reduce) draw(0); });
+  new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(hero);
+  resize(); requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
