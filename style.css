@@ -180,3 +180,28 @@ body { overflow-x: clip; }
 
 .nb { white-space: nowrap; }
 .prose { padding-top: 3rem; } .prose h1 { margin-bottom: 1rem; } .prose h2 { margin-top: 2.2rem; } .prose li { margin: 0 0 0.5rem; } .prose code { font-family: var(--mono); font-size: 0.9em; }
+/* sleeker services and team (12 Nov 2026) */
+.svcs { gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.svc { display: block; grid-row: auto; grid-template-rows: none; margin: 0; padding: 1.4rem 1.5rem; background: transparent; border: 1px solid var(--line); border-top: 1px solid var(--line); border-radius: 12px; box-shadow: none; transition: border-color 0.2s, background 0.2s; }
+.svc:hover { transform: none; box-shadow: none; border-color: color-mix(in srgb, var(--c) 55%, var(--line)); background: color-mix(in srgb, var(--c) 5%, transparent); }
+.svc .head { align-items: center; gap: 0.75rem; margin-bottom: 0.7rem; }
+.svc svg { width: 2.1rem; height: 2.1rem; padding: 0.5rem; margin: 0; border-radius: 8px; background: color-mix(in srgb, var(--c) 13%, transparent); }
+.svc h3 { font-size: 1.05rem; }
+.svc p { color: var(--muted); font-size: 0.98rem; line-height: 1.55; }
+.team { grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); align-items: stretch; gap: 2.2rem 1.75rem; counter-reset: u; }
+.chip { display: flex; flex-direction: column; counter-increment: u; }
+.chip svg { width: 5.5rem; margin-bottom: 0.9rem; }
+.chip h3 { margin: 0 0 0.15rem; font-size: 1.15rem; }
+.chip h3::before { content: "U" counter(u); font-size: 0.7em; margin-right: 0.5em; vertical-align: 0.1em; }
+.chip .role { margin: 0 0 0.6rem; white-space: nowrap; }
+.chip .bio { color: var(--muted); font-size: 0.98rem; line-height: 1.55; }
+/* team: centred chips, designator on the chip */
+.chip { position: relative; align-items: center; text-align: center; }
+.chip svg { width: 6rem; margin-bottom: 1rem; }
+.chip h3::before { content: none; }
+.chip::before { content: "U" counter(u); position: absolute; top: 0.2rem; left: calc(50% + 3.4rem); font: 0.72rem var(--mono); color: var(--c); letter-spacing: 0.04em; }
+.chip .bio { max-width: 17rem; }
+/* team: identical rows for role and bio */
+.chip .role { min-height: 2.5em; display: flex; align-items: flex-start; justify-content: center; text-align: center; white-space: normal; max-width: 15rem; line-height: 1.35; margin-bottom: 0.5rem; }
+.chip .bio { width: 100%; max-width: 17rem; }
+.chip .bio { min-height: calc(5 * 1.55em); }
