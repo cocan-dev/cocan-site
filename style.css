@@ -208,3 +208,6 @@ body { overflow-x: clip; }
 .chip .role { min-height: 2.5em; display: flex; align-items: flex-start; justify-content: center; text-align: center; white-space: normal; max-width: 15rem; line-height: 1.35; margin-bottom: 0.5rem; }
 .chip .bio { width: 100%; max-width: 17rem; }
 .chip .bio { min-height: calc(5 * 1.55em); }
+/* team: title plus subtitle, as on the business card (15 Nov 2026) */
+.chip .role { min-height: 0; margin-bottom: 0.25rem; }
+.chip .sub { margin: 0 0 0.7rem; max-width: 15rem; min-height: 2.8em; font: 0.78rem/1.4 var(--mono); color: var(--muted); }
